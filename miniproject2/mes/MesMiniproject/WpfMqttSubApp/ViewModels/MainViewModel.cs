@@ -5,6 +5,7 @@ using MQTTnet;
 using MySql.Data.MySqlClient;
 using Newtonsoft.Json;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows.Threading;
 using WpfMqttSubApp.Models;
@@ -14,6 +15,7 @@ namespace WpfMqttSubApp.ViewModels
     public partial class MainViewModel : ObservableObject, IDisposable
     {
         #region 내부 멤버변수
+
         private IMqttClient mqttClient;
         private readonly IDialogCoordinator dialogCoordinator;
         private readonly DispatcherTimer timer;
@@ -26,7 +28,7 @@ namespace WpfMqttSubApp.ViewModels
 
         #endregion
 
-        #region MVVM 멤버변수
+        #region MVVM용 멤버변수
 
         private string _brokerHost;
         private string _databaseHost;
@@ -42,10 +44,11 @@ namespace WpfMqttSubApp.ViewModels
         {
             this.dialogCoordinator = coordinator;
 
-            BrokerHost = App.Configuration.Mqtt.Broker; //"210.119.12.75";
-            DatabaseHost = App.Configuration.Database.Server; //"210.119.12.75";
-            mqttTopic = App.Configuration.Mqtt.Topic;  //"pknu/sf75/data"; // 설정파일로 작업가능
-            clientId = App.Configuration.Mqtt.ClientId;  //"MesMqttSub";
+            BrokerHost = App.Configuration.Mqtt.Broker;  // "210.119.12.52";
+            DatabaseHost = App.Configuration.Database.Server;
+            mqttTopic = App.Configuration.Mqtt.Topic;    // 설정파일로 작업가능
+            clientId = App.Configuration.Mqtt.ClientId; 
+
             connection = new MySqlConnection();  // 예외처리용 
 
             // RichTextBox 테스트용. 
@@ -92,10 +95,11 @@ namespace WpfMqttSubApp.ViewModels
 
             // MQTT 클라이언트접속 설정
             var mqttClientOptions = new MqttClientOptionsBuilder()
-                .WithTcpServer(BrokerHost)
-                .WithClientId(clientId) // 구독시스템도 클라이언트 ID가 필요할 수 있음
+                .WithTcpServer(BrokerHost, App.Configuration.Mqtt.Port)
+                //.WithClientId(clientId)  // 구독시스템도 클라이언트ID가 필요할 수 있음
                 .WithCleanSession(true)
                 .Build();
+
             // MQTT 접속 후 이벤트처리
             mqttClient.ConnectedAsync += async e =>
             {
@@ -195,7 +199,11 @@ namespace WpfMqttSubApp.ViewModels
                 return;
             }
 
-            connString = $"Server={DatabaseHost};Database={App.Configuration.Database.Database};Uid={App.Configuration.Database.UserId};Pwd={App.Configuration.Database.Password};Charset=utf8";
+            connString = $"Server={DatabaseHost};" +
+                         $"Database={App.Configuration.Database.Database};" +
+                         $"Uid={App.Configuration.Database.UserId};" +
+                         $"Pwd={App.Configuration.Database.Password};" +
+                         "Charset=utf8";
 
             await ConnectDatabaseServer();
         }

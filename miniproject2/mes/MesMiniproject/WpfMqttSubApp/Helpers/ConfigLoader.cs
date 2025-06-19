@@ -10,7 +10,7 @@ namespace WpfMqttSubApp.Helpers
         {
             if (!File.Exists(path))
             {
-                throw new FileNotFoundException("설정파일이 없습니다.", path);
+                throw new FileNotFoundException("설정파일이 없습니다", path);
             }
 
             string json = File.ReadAllText(path); // 문자열로 읽음
@@ -21,9 +21,6 @@ namespace WpfMqttSubApp.Helpers
                 throw new InvalidDataException("설정파일을 읽을 수 없습니다.");
             }
             return config;
-
-
-
         }
     }
 }
