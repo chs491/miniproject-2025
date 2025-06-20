@@ -1,4 +1,7 @@
-﻿using System.Windows;
+﻿using MahApps.Metro.Controls.Dialogs;
+using System.Diagnostics.Tracing;
+using System.Windows;
+using WpfMrpSimulatorApp.Helpers;
 using WpfMrpSimulatorApp.ViewModels;
 using WpfMrpSimulatorApp.Views;
 
@@ -11,7 +14,9 @@ namespace WpfMrpSimulatorApp
     {
         private void Application_Startup(object sender, StartupEventArgs e)
         {
-            var viewModel = new MainViewModel();
+            Common.DIALOGCOORDINATOR = DialogCoordinator.Instance;
+
+            var viewModel = new MainViewModel(Common.DIALOGCOORDINATOR);
             var view = new MainView
             {
                 DataContext = viewModel,
