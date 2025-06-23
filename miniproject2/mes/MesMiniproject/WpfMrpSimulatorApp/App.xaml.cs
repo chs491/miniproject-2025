@@ -1,5 +1,6 @@
 ﻿using MahApps.Metro.Controls.Dialogs;
-using System.Diagnostics.Tracing;
+using System.Configuration;
+using System.Data;
 using System.Windows;
 using WpfMrpSimulatorApp.Helpers;
 using WpfMrpSimulatorApp.ViewModels;
@@ -25,5 +26,4 @@ namespace WpfMrpSimulatorApp
             view.ShowDialog();
         }
     }
-
 }
