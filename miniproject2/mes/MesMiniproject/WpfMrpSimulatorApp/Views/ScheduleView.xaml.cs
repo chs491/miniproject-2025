@@ -25,6 +25,4 @@ namespace WpfMrpSimulatorApp.Views
             InitializeComponent();
         }
     }
-
-
 }

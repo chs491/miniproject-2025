@@ -7,11 +7,12 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Xml.Schema;
 using WpfMrpSimulatorApp.Helpers;
 using WpfMrpSimulatorApp.Models;
 
 namespace WpfMrpSimulatorApp.ViewModels
-{
+{   
     public partial class ScheduleViewModel : ObservableObject
     {
         // readonly 생성자에서 할당하고나면 그 이후에 값변경 불가
@@ -38,22 +39,22 @@ namespace WpfMrpSimulatorApp.ViewModels
 
         #region View와 연동할 속성
 
+
         // 시작시간, 종료시간용 데이터 속성
         public ObservableCollection<TimeOption> TimeOptions { get; }
             = new ObservableCollection<TimeOption>(
-        Enumerable.Range(0, 24).Select(h => new TimeOption
-        {
-            Time = new TimeOnly(h, 0),
-            Display = $"{h:00}:00"
-        })
-        );
+                Enumerable.Range(0, 24).Select(h => new TimeOption
+                {
+                    Time = new TimeOnly(h, 0),
+                    Display = $"{h:00}:00"
+                })
+            );
 
-        // 플랜트코드 콤보박스용 데이터
+        // 플랜트코드 콤보박스용 데이터 속성
         public ObservableCollection<Setting> PlantCodes { 
-            get => _plantCodes; 
-            set => SetProperty(ref _plantCodes, value); 
+            get => _plantCodes;
+            set => SetProperty(ref _plantCodes, value);
         }
-
         // 설비아이디 콤보박스용 데이터 속성
         public ObservableCollection<Setting> FacilityIds
         {
@@ -94,11 +95,11 @@ namespace WpfMrpSimulatorApp.ViewModels
                 // 최초에 BasicCode에 값이 있는 상태만 수정상태
                 if (_selectedSchedule != null)  // 삭제 후에는 _selectedSetting자체가 null이 됨
                 {
-                        if (_selectedSchedule.SchIdx > 0)
-                            CanSave = CanRemove = true; // 기존데이터가 있으면 수정, 삭제 가능           
-                    }
+                    if (_selectedSchedule.SchIdx > 0)
+                        CanSave = CanRemove = true; // 기존데이터가 있으면 수정, 삭제 가능
                 }
             }
+        }
 
         public DateTime? RegDt {
             get => _regDt;
@@ -117,8 +118,7 @@ namespace WpfMrpSimulatorApp.ViewModels
             this.dialogCoordinator = coordinator;  // 파라미터값으로 초기화
             this.dbContext = new IoTDbContext();
 
-            InitComboboxes(); // Db에서 데이터로드 후 콤보박스에 들어가는 데이터할당 초기화
-
+            InitComboboxes(); // DB에서 데이터로드 후 콤보박스에 들어가는 데이터할당 초기화 
             LoadGridFromDb(); // DB에서 데이터로드해서 그리드에 출력
             IsUpdate = true;
 
@@ -128,7 +128,7 @@ namespace WpfMrpSimulatorApp.ViewModels
 
         private void InitComboboxes()
         {
-            using (var db = new IoTDbContext()) 
+            using (var db = new IoTDbContext())
             {
                 var plants = db.Settings.Where(s => s.BasicCode.StartsWith("PLT")).ToList();
                 PlantCodes = new ObservableCollection<Setting>(plants);
@@ -182,7 +182,7 @@ namespace WpfMrpSimulatorApp.ViewModels
         private void InitVariable()
         {
             SelectedSchedule = new ScheduleNew();
-            SelectedSchedule.SchDate = DateOnly.FromDateTime(DateTime.Now); // 신규버튼 눌렀을 때 0001-01-01방지
+            // SelectedSchedule.SchDate = DateOnly.FromDateTime(DateTime.Now); // 신규버튼 눌렀을때 0001-01-01방지
             // IsUpdate가 False면 신규, True면 수정
             IsUpdate = false;
         }
@@ -214,17 +214,17 @@ namespace WpfMrpSimulatorApp.ViewModels
                     SchStartTime = SelectedSchedule.SchStartTime,
                     SchEndTime = SelectedSchedule.SchEndTime,
                     SchFacilityId = SelectedSchedule.SchFacilityId,
-                    SchAmount = SelectedSchedule.SchAmount
+                    SchAmount = SelectedSchedule.SchAmount                    
                 };
 
-                using (var db = new IoTDbContext()) 
+                using (var db = new IoTDbContext())
                 {
                     if (schedule.SchIdx == 0) // 신규
                     {
-                        schedule.RegDt = DateTime.Now; // 등록일 현재일자
-                        db.Schedules.Add(schedule); // ASP.NET Core에서 한 작업과 동일  
+                        schedule.RegDt = DateTime.Now;  // 등록일 현재일자
+                        db.Schedules.Add(schedule); // ASP.NET Core에서 한 작업과 동일
                     }
-                    else // 수정
+                    else  // 수정
                     {
                         var origin = db.Schedules.Find(schedule.SchIdx); // ASP.NET Core와 동일
                         if (origin != null)
@@ -260,7 +260,7 @@ namespace WpfMrpSimulatorApp.ViewModels
 
             try
             {
-               using (var db = new IoTDbContext())
+                using (var db = new IoTDbContext())
                 {
                     var entity = db.Schedules.Find(SelectedSchedule.SchIdx);
                     if (entity != null)
@@ -269,6 +269,8 @@ namespace WpfMrpSimulatorApp.ViewModels
                         db.SaveChanges(); // COMMIT
                     }
                 }
+
+                await this.dialogCoordinator.ShowMessageAsync(this, "공정계획 삭제", "데이터가 삭제되었습니다.");
             }
             catch (Exception ex)
             {

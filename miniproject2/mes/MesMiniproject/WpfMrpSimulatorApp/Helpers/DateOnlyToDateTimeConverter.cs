@@ -3,7 +3,7 @@ using System.Windows.Data;
 
 namespace WpfMrpSimulatorApp.Helpers
 {
-    // 형변환시 WPF에 컨버터 클래스 작업은 필요작업!
+    // 형변환시 WPF에 컨버터 클래스 작성은 필요작업!
     // DateTime, TimeOnly, DateOnly 형을 <--> String 형으로 형변환
     public class DateOnlyToDateTimeConverter : IValueConverter
     {
