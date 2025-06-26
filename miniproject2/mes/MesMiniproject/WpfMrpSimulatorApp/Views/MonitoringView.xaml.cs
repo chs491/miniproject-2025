@@ -1,6 +1,18 @@
-﻿using System.Windows.Controls;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
+using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
+using System.Windows.Shapes;
 
 namespace WpfMrpSimulatorApp.Views
 {
@@ -42,10 +54,10 @@ namespace WpfMrpSimulatorApp.Views
                 Duration = TimeSpan.FromSeconds(2), // 계획 로드타임(Schedules의 LoadTime 값이 들어가야 함)
             }; // 이런 초기화가 좀더 최신 코딩방식.
 
-            //아래는 구식 코딩방식
-            pa.From = 127;
-            pa.To = 417;
-            pa.Duration = TimeSpan.FromSeconds(2);
+            // 아래는 구식 코딩방식
+            //pa.From = 127;
+            //pa.To = 417; 
+            //pa.Duration = TimeSpan.FromSeconds(2); 
 
             Product.BeginAnimation(Canvas.LeftProperty, pa);
         }
