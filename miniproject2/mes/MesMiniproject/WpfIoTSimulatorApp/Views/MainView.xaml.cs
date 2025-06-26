@@ -40,7 +40,7 @@ namespace WpfIoTSimulatorApp.Views
             {
                 From = 127,
                 To = 417,  // x축: 센서아래 위치
-                Duration = TimeSpan.FromSeconds(2), // 계획 로드타임(Schedules의 LoadTime 값이 들어가야 함)
+                Duration = TimeSpan.FromMilliseconds(50), // 계획 로드타임(Schedules의 LoadTime 값이 들어가야 함)
             }; // 이런 초기화가 좀더 최신 코딩방식.
 
             // 아래는 구식 코딩방식
