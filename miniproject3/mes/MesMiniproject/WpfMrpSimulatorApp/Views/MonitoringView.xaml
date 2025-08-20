@@ -42,7 +42,7 @@
                                    mah:TextBoxHelper.Watermark="순번"
                                    Minimum="1" Value="{Binding SchIdx}" />
                 <Button Content="Search" Command="{Binding SearchProcessCommand}" Margin="0,0,5,0" />
-                <Button Content="Start" Command="{Binding StartProcessCommand}">
+                <Button Content="Start" Command="{Binding StartProcessCommand}" Visibility="Hidden">
                     <Button.ContentTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
